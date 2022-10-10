@@ -11,7 +11,7 @@ namespace CarefreeGrimm
     {
         public CarefreeGrimm() : base("Carefree Grimm") { }
 
-        public override string GetVersion() => "1.0.0.0";
+        public override string GetVersion() => "1.0.0.1";
 
         public int CharmId;
 
