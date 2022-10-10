@@ -27,7 +27,6 @@ namespace CarefreeGrimm
             //HooksT
             On.CharmIconList.GetSprite += CharmIconHook;
             On.PlayMakerFSM.OnEnable += FsmHook;
-            ModHooks.SetPlayerIntHook += SetIntHook;
             ModHooks.GetPlayerIntHook += GetIntHook;
             ModHooks.SetPlayerBoolHook += SetBoolHook;
             ModHooks.GetPlayerBoolHook += GetBoolHook;
