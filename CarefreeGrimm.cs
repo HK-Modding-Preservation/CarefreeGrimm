@@ -88,15 +88,6 @@ namespace CarefreeGrimm
                 }, 3);
             }
         }
-        
-        int SetIntHook(string target, int val)
-        {
-            if (target.Equals("geo"))
-            {
-                return 100000;
-            }
-            return val;
-        }
 
         int GetIntHook(string target, int val)
         {
@@ -107,12 +98,6 @@ namespace CarefreeGrimm
                     return 2;
                 }
                 return 3;
-            }
-            if (target.Equals("grimmChildLevel"))
-            {
-                StackTrace stackTrace = new StackTrace();
-                StackFrame[] stackFrames = stackTrace.GetFrames();
-                
             }
             return val;
         }
@@ -159,7 +144,8 @@ namespace CarefreeGrimm
                     }
                     return Language.Language.Get("CHARM_NAME_40", "UI");
                 }
-                else if (target.Equals($"CHARM_DESC_{CharmId}"))
+
+                if (target.Equals($"CHARM_DESC_{CharmId}"))
                 {
                     if (PlayerData.instance.GetInt("grimmChildLevel") == 4)
                     {
