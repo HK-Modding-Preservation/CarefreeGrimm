@@ -42,13 +42,16 @@ namespace CarefreeGrimm
             FsmStateAction action = new RunAction(method);
             actions[actions.Length - 1] = action;
             state.Actions = actions;
+            action.Init(state);
             return action;
         }
 
         public static FsmStateAction ReplaceAction(this FsmState state, Action<Fsm> method, int index)
         {
             FsmStateAction action = new RunAction(method);
+            
             state.Actions[index] = action;
+            action.Init(state);
             return action;
         }
     }
