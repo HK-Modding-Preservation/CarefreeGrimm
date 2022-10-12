@@ -49,7 +49,6 @@ namespace CarefreeGrimm
         public static FsmStateAction ReplaceAction(this FsmState state, Action<Fsm> method, int index)
         {
             FsmStateAction action = new RunAction(method);
-            
             state.Actions[index] = action;
             action.Init(state);
             return action;
