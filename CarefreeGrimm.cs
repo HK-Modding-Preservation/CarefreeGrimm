@@ -1,17 +1,17 @@
 ﻿using HutongGames.PlayMaker;
+using JetBrains.Annotations;
 using Modding;
 using UnityEngine;
 using SFCore;
 
 namespace CarefreeGrimm
 {
-    public class CarefreeGrimm : Mod, ILocalSettings<Settings>
+    [UsedImplicitly]
+    public class CarefreeGrimm() : Mod("Carefree Grimm"), ILocalSettings<Settings>
     {
-        public CarefreeGrimm() : base("Carefree Grimm") { }
+        public override string GetVersion() => "1.0.1.0";
 
-        public override string GetVersion() => "1.0.0.2";
-
-        public int CharmId;
+        private int CharmId;
 
         Settings settings;
 
@@ -54,7 +54,7 @@ namespace CarefreeGrimm
                 spawnState.AddTransition("CHECK", "Init");
                 spawnState.AddAction(fsm =>
                 {
-                    if ((PlayerData.instance.GetBool($"equippedCharm_{((CarefreeGrimm)ModHooks.GetMod("Carefree Grimm")).CharmId}") && PlayerData.instance.grimmChildLevel == 5) || (PlayerData.instance.GetBool($"equippedCharm_40") && PlayerData.instance.grimmChildLevel == 4))
+                    if ((settings.Equipped && PlayerData.instance.grimmChildLevel == 5) || (PlayerData.instance.GetBool($"equippedCharm_40") && PlayerData.instance.grimmChildLevel > 0 && PlayerData.instance.grimmChildLevel < 5))
                     {
                         fsm.Event("CHECK");
                     }
@@ -64,7 +64,7 @@ namespace CarefreeGrimm
                 charmState.AddTransition("CHECK", "Init");
                 charmState.AddAction(fsm =>
                 {
-                    if ((PlayerData.instance.GetBool($"equippedCharm_{((CarefreeGrimm)ModHooks.GetMod("Carefree Grimm")).CharmId}") && PlayerData.instance.grimmChildLevel == 5) || (PlayerData.instance.GetBool($"equippedCharm_40") && PlayerData.instance.grimmChildLevel == 4))
+                    if ((settings.Equipped && PlayerData.instance.grimmChildLevel == 5) || (PlayerData.instance.GetBool($"equippedCharm_40") && PlayerData.instance.grimmChildLevel > 0 && PlayerData.instance.grimmChildLevel < 5 ))
                     {
                         fsm.Event("CHECK");
                     }
@@ -82,12 +82,12 @@ namespace CarefreeGrimm
                     else
                     {
                         self.FsmVariables.GetFsmInt("Grimm Level").Value =
-                            PlayerData.instance.GetInt("grimmChildLevel");
+                            PlayerData.instance.grimmChildLevel;
                     }
                 }, 3);
             }
         }
-
+        
         int GetIntHook(string target, int val)
         {
             if (target.Equals($"charmCost_{CharmId}"))
@@ -114,6 +114,13 @@ namespace CarefreeGrimm
         {
             if (target.Equals($"equippedCharm_{CharmId}") || target.Equals("equippedCharm_40_N"))
             {
+                if (PlayerData.instance.grimmChildLevel < 4)
+                {
+                    settings.Equipped = false;
+                    GameManager.instance.UnequipCharm(CharmId);
+                    PlayMakerFSM.BroadcastEvent("CHARM INDICATOR CHECK");
+                    PlayMakerFSM.BroadcastEvent("CHARM EQUIP CHECK");
+                }
                 return settings.Equipped;
             }
 

@@ -6,15 +6,8 @@ namespace CarefreeGrimm
     public static class FsmExtensions
     {
 
-        class RunAction : FsmStateAction
+        class RunAction(Action<Fsm> method) : FsmStateAction
         {
-            Action<Fsm> method;
-
-            public RunAction(Action<Fsm> method)
-            {
-                this.method = method;
-            }
-
             public override void OnEnter()
             {
                 method.Invoke(Fsm);
